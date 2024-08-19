@@ -87,7 +87,7 @@ def test_net(
 
     # remove y from device, whether GPU or CPU, and check if cuda was used before calling empty_cache() to clean up
     del y
-    if device == 'cuda':
+    if 'cuda' in device:
         torch.cuda.empty_cache()
 
     return boxes_list, polys_list
@@ -100,7 +100,7 @@ def get_detector(trained_model, device='cpu', quantize=True, cudnn_benchmark=Fal
         if quantize:
             try:
                 torch.quantization.quantize_dynamic(net, dtype=torch.qint8, inplace=True)
-            except:
+            except Exception:
                 pass
     else:
         net.load_state_dict(copyStateDict(torch.load(trained_model, map_location=device)))
