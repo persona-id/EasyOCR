@@ -1,14 +1,16 @@
-import torch
-import torch.backends.cudnn as cudnn
-from torch.autograd import Variable
-from PIL import Image
 from collections import OrderedDict
 
 import cv2
 import numpy as np
-from .craft_utils import getDetBoxes, adjustResultCoordinates
-from .imgproc import resize_aspect_ratio, normalizeMeanVariance
+import torch
+import torch.backends.cudnn as cudnn
+from PIL import Image
+from torch.autograd import Variable
+
 from .craft import CRAFT
+from .craft_utils import adjustResultCoordinates, getDetBoxes
+from .imgproc import normalizeMeanVariance, resize_aspect_ratio
+
 
 def copyStateDict(state_dict):
     if list(state_dict.keys())[0].startswith("module"):
@@ -21,7 +23,18 @@ def copyStateDict(state_dict):
         new_state_dict[name] = v
     return new_state_dict
 
-def test_net(canvas_size, mag_ratio, net, image, text_threshold, link_threshold, low_text, poly, device, estimate_num_chars=False):
+def test_net(
+        canvas_size,
+        mag_ratio,
+        net,
+        image,
+        text_threshold,
+        link_threshold,
+        low_text,
+        poly,
+        device,
+        estimate_num_chars=False
+):
     if isinstance(image, np.ndarray) and len(image.shape) == 4:  # image is batch of np arrays
         image_arrs = image
     else:                                                        # image is single numpy array
@@ -89,7 +102,19 @@ def get_detector(trained_model, device='cpu', quantize=True, cudnn_benchmark=Fal
     net.eval()
     return net
 
-def get_textbox(detector, image, canvas_size, mag_ratio, text_threshold, link_threshold, low_text, poly, device, optimal_num_chars=None, **kwargs):
+def get_textbox(
+        detector,
+        image,
+        canvas_size,
+        mag_ratio,
+        text_threshold,
+        link_threshold,
+        low_text,
+        poly,
+        device,
+        optimal_num_chars=None,
+        **kwargs
+):
     result = []
     estimate_num_chars = optimal_num_chars is not None
     bboxes_list, polys_list = test_net(canvas_size, mag_ratio, detector,
