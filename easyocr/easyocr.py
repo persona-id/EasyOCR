@@ -14,10 +14,20 @@ from PIL import Image
 
 from .config import *
 from .recognition import get_recognizer, get_text
-from .utils import (calculate_md5, diff, download_and_unzip, get_image_list,
-                    get_paragraph, group_text_box, make_rotated_img_list,
-                    merge_to_free, printProgressBar, reformat_input,
-                    reformat_input_batched, set_result_with_confidence)
+from .utils import (
+    calculate_md5,
+    diff,
+    download_and_unzip,
+    get_image_list,
+    get_paragraph,
+    group_text_box,
+    make_rotated_img_list,
+    merge_to_free,
+    printProgressBar,
+    reformat_input,
+    reformat_input_batched,
+    set_result_with_confidence,
+)
 
 if sys.version_info[0] == 2:
     from io import open
@@ -31,7 +41,6 @@ else:
 LOGGER = getLogger(__name__)
 
 class Reader(object):
-
     def __init__(self, lang_list, gpu=True, model_storage_directory=None,
                  user_network_directory=None, detect_network="craft",
                  recog_network='standard', download_enabled=True,
